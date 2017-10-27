@@ -44,7 +44,7 @@ def Testadmin(request):
     # context['comment_list'] = article_list
     # context['form'] = form
 
-    return render(request,'index.html',context)
+    return render(request,'home.html',context)
 
 
 

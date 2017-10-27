@@ -1,159 +1,82 @@
+{% load static %}
 <!DOCTYPE html>
-{% load staticfiles %}
 <html>
   <head>
-    <meta charset="utf-8">
-    <title>It's my ass!</title>
-    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
-    <script src="{% static 'js/vue1.js'%}"></script>
-    <script src="{% static 'js/semantic.js' %}"></script>
-    <script src="{% static 'js/reqwest.js' %}">
+      <meta charset="utf-8">
+      <title>First Test!</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
+      <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.2.10/dist/semantic.min.js"></script>
 
-    </script>
-    <link rel="stylesheet" href="{% static 'css/semantic.css' %}"/>
-    <style type="text/css">
-        .ui.right.floated.ui.primary.button{
-          margin-right: 0.3em;
-          margin-left: 0.25em;
-        }
-        .ui.inverted.basic.borderless.menu{
-          margin: 0em 0em;
-        }
-        h1 {color: white}
-    </style>
   </head>
-  <body id="app" >
-    {# <img class="ui fluid image"src="{% static 'images/a1.png'%}" >#}
-
-    <!-- <div class="ui inverted vertical masthead left huge aligned segment">
-          <h1 class="ui inverted header">
-            <img src="{% static 'images/logo2.png' %}">
-            学生信息管理系统
-          </h1>
-      </div> -->
-    <div class="ui inverted  basic borderless segment menu">
-        <div class="header item">
-            <div class="ui header">
-                <h1 style="font">学生信息管理系统</h1>
-            </div>
-        </div>
-        <div class="right menu">
-          <div class="item">
-            <h5 class="ui inverted header">
-              <span style="margin-right:20px;">{{ request.user.username }}</span>
-              <div class="ui mini circular image">
-                <img src="{% static 'images/anon.png'%}" alt="" />
-              </div>
-            </h5>
-          </div>
-          <div class="item">
-            <a href="{% url 'logout' %}" class="ui inverted circular button">登出</a>
-          </div>
-        </div>
+  <body>
+    <div class="ui thin sidebar left vertical inverted menu" id="sidebar">
+      <div class="item">
+        <img src="{% static 'images/logo2.png' %}">
+      </div>
+      <div class="item">
+        Doucument
+        <i class="content icon"></i>
+      </div>
+      <div class="item">
+        Options
+        <i class="options icon"></i>
+      </div>
+      <div class="item">
+        Others
+        <i class="browser icon"></i>
+      </div>
+    </div>
+  <div class="pusher">
+    <div class="ui menu">
+      <div class="header item" id="menu">
+        <i class="browser icon"></i>
+        Menu
+      </div>
+      <div class="item">
+        <i class="bar chart icon"
+        ></i>
+        Charts
+      </div>
+      <div class="item">
+        <i class="idea icon"></i>
+        Others
+      </div>
     </div>
 
-    <div class="container">
-      <div class="ui menu">
 
-        <div class="item"><i class="database icon"></i></div>
-          <div class="ui simple dropdown item">
-            公告
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <a class="item" href="{% url 'index'%}">公告</a>
-              <a class="item" href="{% url 'edit_page' %}">编辑模式</a>
-            </div>
-          </div>
-          <a class="item" href="{% url 'table_page'%}">课表查询</a>
-          <div class="ui simple dropdown item">
-            #作业
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <a class="item">#作业管理 </a>
-            </div>
-          </div>
-          <a class="item" >#出勤查询</a>
-          <a class="item" href="{% url 'aboutme'%}">关于本站</a>
-
-        <div class="right menu">
-          <div class="item">
-              <a class="ui primary button" href="{% url 'register' %}">注册</a>
-          </div>
-        </div>
-
+    <div class="ui container segment">
+        {%  for i in info %}
+      <div class="ui item">
+        <a href="{{ i.detail_url }}" target="view_window"><h2 class="ui header">{{ i.tittle }}</h2></a>
+          <br>
+          <a href="http://ditu.amap.com/search?query={{ i.address }}" target="view_window"><h3>{{ i.address }}</h3></a>
+          <br>
+        <a href="{{ i.landlord_url }}" target="view_window"><h4>{{ i.lanlord_name }}</h4></a>
       </div>
+    <div class="ui divider"></div>
+        {% endfor %}
 
-      <div class="ui raised text container segment" >
-        <div>
-          {% for i in article_list%}
-            <a href="{% url 'detail' i.id %}">
-              <h2 class="ui header">{{ i.title }}</h2>
-            </a>
-              <div class="ui hidden divider"></div>
-              <p>{{ i.content }}</p>
-              <div class="ui divider"></div>
-              <br>
-          {% endfor %}
-        </div>
-
-        <div class="ui center aligned container">
-          <div class="ui pagination menu">
-            {% if article_list.has_previous %}
-          <a class="item" href="?page={{ article_list.previous_page_number }}"><i class="icon left arrow"></i></a>
-            {% else %}
-          <a class="disabled item" ><i class="icon left arrow"></i></a> <!-- href="?page={{ article_list.start_index }}" -->
-            {% endif %}
-          <div class="disable item">
-             {{ article_list.number }} of {{ article_list.paginator.num_pages }}
-          </div>
-          {% if article_list.has_next %}
-            <a class="item" href="?page={{ article_list.next_page_number }}"><i class="icon right arrow"></i></a>
-          {% else %}
-            <a class="disabled item" ><i class="icon right arrow"></i></a> <!-- href="?page={{ article_list.number }}" -->
+      <div class="ui pagination menu">
+          {% if info.has_previous %}
+        <a class="item" href="?page={{ info.previous_page_number }}"> < </a>
           {% endif %}
-          </div>
+        <div class="disable item">
+           {{ info.number }} of {{ info.paginator.num_pages }}
         </div>
+      {% if info.has_next %}
+        <a class="item" href="?page={{ info.next_page_number }}"> > </a>
+      {% endif %}
       </div>
-      <br><br>
-</div>
+    </div>
 
-<script>
-var vm = new Vue({
-    el:"#app",
-    data:{
-      modal:{
-        show:false,
-        isLoading:false,
-        title:'',
-        url:'',
-        content:'',
-        msg:''
-    },
-      infos:[]
-    },
-    methods:{
-      get_info:function () {
-        var self = this;
-        reqwest({
-          url:"http://localhost:8000/api/article/?format=json",
-          type:"json",
-          method:"get",
-          success:function (resp) {
-            self.infos = resp
-          }
-        })
-      },
-      modalSwitch:function () {
-            this.modal.show = !this.modal.show
-      }
-    },
-    ready:function () {
-      this.get_info()
-    }
-  })
-</script>
 
+  </div>
+  <script>
+    $('#menu').click(function(){
+      $('#sidebar').sidebar('toggle')
+    });
+  </script>
 
   </body>
 </html>
